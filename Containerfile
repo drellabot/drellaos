@@ -8,6 +8,8 @@ RUN dnf install -y \
       golang \
       jq \
       opentofu \
+      tmux \
+      vim \
     && dnf clean all
 
 # User 'drella': created at boot via sysusers, home dir via tmpfiles, passwordless sudo
