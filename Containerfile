@@ -8,8 +8,9 @@ RUN dnf install -y \
       opentofu \
     && dnf clean all
 
-# User 'drella': created at boot via sysusers, passwordless sudo
+# User 'drella': created at boot via sysusers, home dir via tmpfiles, passwordless sudo
 COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
+COPY usr/lib/tmpfiles.d/drella-home.conf /usr/lib/tmpfiles.d/drella-home.conf
 COPY usr/etc/sudoers.d/drella /etc/sudoers.d/drella
 
 # SSH authorized keys fetched from GitHub at build time, stored in /usr
