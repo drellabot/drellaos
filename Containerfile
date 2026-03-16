@@ -14,6 +14,9 @@ COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
 COPY usr/lib/tmpfiles.d/drella-home.conf /usr/lib/tmpfiles.d/drella-home.conf
 COPY usr/etc/sudoers.d/drella /etc/sudoers.d/drella
 
+# Add ~/.local/bin to PATH for all users (e.g. claude code lives here)
+COPY usr/etc/profile.d/local-bin.sh /etc/profile.d/local-bin.sh
+
 # SSH authorized keys fetched from GitHub at build time, stored in /usr
 # sshd is configured to read from this path
 RUN set -euo pipefail && \
