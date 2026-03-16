@@ -1,0 +1,12 @@
+[Unit]
+Description=Fetch GCloud credentials from AWS Secrets Manager
+After=network-online.target systemd-tmpfiles-setup.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/drella-fetch-gcloud-creds
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

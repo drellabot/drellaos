@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SECRET_NAME="drella-secrets"
+AWS_REGION="us-east-1"
+
+CREDS_DIR="/var/home/drella/.config/gcloud"
+CREDS_FILE="${CREDS_DIR}/application_default_credentials.json"
+
+install -d -o drella -g drella -m 0700 "${CREDS_DIR}"
+
+aws secretsmanager get-secret-value \
+    --region "${AWS_REGION}" \
+    --secret-id "${SECRET_NAME}" \
+    --query SecretString \
+    --output text | jq -r '.gcloud_credentials' > "${CREDS_FILE}"
+
+chown drella:drella "${CREDS_FILE}"
+chmod 0600 "${CREDS_FILE}"
