@@ -38,9 +38,9 @@ jobs:
       - name: Build image
         run: |
           TAG_ARGS=""
-          for tag in ${{ steps.meta.outputs.tags }}; do
+          while IFS= read -r tag; do
             TAG_ARGS="${TAG_ARGS} --tag ${tag}"
-          done
+          done <<< "${DOCKER_METADATA_OUTPUT_TAGS}"
           podman build ${TAG_ARGS} -f Containerfile .
 
       - name: Log in to GHCR
@@ -50,6 +50,6 @@ jobs:
       - name: Push image
         if: github.event_name != 'pull_request'
         run: |
-          for tag in ${{ steps.meta.outputs.tags }}; do
+          while IFS= read -r tag; do
             podman push "${tag}"
-          done
+          done <<< "${DOCKER_METADATA_OUTPUT_TAGS}"
