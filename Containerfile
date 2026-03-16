@@ -1,5 +1,13 @@
 FROM quay.io/fedora/fedora-bootc:43
 
+# Install packages
+RUN dnf install -y \
+      git-core \
+      gh \
+      golang \
+      opentofu \
+    && dnf clean all
+
 # User 'drella': created at boot via sysusers, passwordless sudo
 COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
 COPY usr/etc/sudoers.d/drella /etc/sudoers.d/drella
