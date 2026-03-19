@@ -8,6 +8,7 @@ RUN dnf install -y \
       golang \
       jq \
       opentofu \
+      rsync \
       tmux \
       vim \
     && dnf clean all
