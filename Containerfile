@@ -3,6 +3,7 @@ FROM quay.io/fedora/fedora-bootc:43
 # Install packages
 RUN dnf install -y \
       awscli2 \
+      caddy \
       git-core \
       gh \
       golang \
