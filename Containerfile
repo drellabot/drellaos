@@ -14,6 +14,9 @@ RUN dnf install -y \
       vim \
     && dnf clean all
 
+# Allow rootless services to bind to port 80+
+COPY usr/lib/sysctl.d/80-unprivileged-ports.conf /usr/lib/sysctl.d/80-unprivileged-ports.conf
+
 # User 'drella': created at boot via sysusers, home dir via tmpfiles, passwordless sudo
 COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
 COPY usr/lib/tmpfiles.d/drella-home.conf /usr/lib/tmpfiles.d/drella-home.conf
