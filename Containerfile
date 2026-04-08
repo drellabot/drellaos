@@ -2,7 +2,6 @@ FROM quay.io/fedora/fedora-bootc:43
 
 # Install packages
 RUN dnf install -y \
-      awscli2 \
       caddy \
       git-core \
       gh \
@@ -17,6 +16,9 @@ RUN dnf install -y \
 # Allow rootless services to bind to port 80+
 COPY usr/lib/sysctl.d/80-unprivileged-ports.conf /usr/lib/sysctl.d/80-unprivileged-ports.conf
 
+# bootc install configuration
+COPY usr/lib/bootc/install/00-drellaos.toml /usr/lib/bootc/install/00-drellaos.toml
+
 # User 'drella': created at boot via sysusers, home dir via tmpfiles, passwordless sudo
 COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
 COPY usr/lib/tmpfiles.d/drella-home.conf /usr/lib/tmpfiles.d/drella-home.conf
@@ -26,6 +28,7 @@ COPY usr/etc/sudoers.d/drella /etc/sudoers.d/drella
 COPY usr/etc/profile.d/local-bin.sh /etc/profile.d/local-bin.sh
 
 # Fetch credentials from AWS Secrets Manager at boot
+# The script detects if running in AWS and gracefully skips if not (e.g., local VM deployment)
 COPY usr/libexec/drella-fetch-secrets /usr/libexec/drella-fetch-secrets
 COPY usr/lib/systemd/system/drella-fetch-secrets.service /usr/lib/systemd/system/drella-fetch-secrets.service
 RUN systemctl enable drella-fetch-secrets.service
