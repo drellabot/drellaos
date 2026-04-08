@@ -1,0 +1,5 @@
+# User-specific bootc-image-builder config (contains SSH keys)
+config.json
+
+# bootc-image-builder output
+output/

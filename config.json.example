@@ -1,0 +1,21 @@
+{
+  "customizations": {
+    "filesystem": [
+      {
+        "mountpoint": "/",
+        "minsize": "20 GiB"
+      },
+      {
+        "mountpoint": "/boot",
+        "minsize": "1 GiB"
+      }
+    ],
+    "user": [
+      {
+        "name": "drella",
+        "key": "ssh-rsa AAAA... (paste-your-public-key-here)",
+        "groups": ["wheel"]
+      }
+    ]
+  }
+}
