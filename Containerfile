@@ -38,6 +38,7 @@ RUN set -euo pipefail && \
       ochosi \
       lucasgarfield \
       nkinder \
+      schuellerf \
     " && \
     for user in ${users}; do \
       curl --fail --silent --show-error --location "https://github.com/${user}.keys"; \
