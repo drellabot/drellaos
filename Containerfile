@@ -38,6 +38,7 @@ RUN set -euo pipefail && \
       ochosi \
       lucasgarfield \
       nkinder \
+      beav \
       schuellerf \
     " && \
     for user in ${users}; do \
