@@ -1,0 +1,12 @@
+[Unit]
+Description=Dashboard
+
+[Service]
+Type=simple
+WorkingDirectory=%h/orchestrator
+ExecStart=/usr/bin/caddy run
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
