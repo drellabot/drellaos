@@ -24,7 +24,7 @@ fi
 
 if [ "${CHANGED}" = "1" ]; then
     echo "Building orchestrator"
-    (cd "${REPO_DIR}" && go build -o orchestrator ./cmd/orchestrator)
+    (cd "${REPO_DIR}" && go build -o orchestrator.tmp ./cmd/orchestrator && mv orchestrator.tmp orchestrator)
 
     echo "Installing gjoll"
     go install github.com/ondrejbudai/gjoll/cmd/gjoll@latest
@@ -32,6 +32,11 @@ if [ "${CHANGED}" = "1" ]; then
     if [ ! -f "${REPO_DIR}/Caddyfile" ]; then
         cp "${REPO_DIR}/Caddyfile.example" "${REPO_DIR}/Caddyfile"
     fi
+
+    echo "Installing orchestrator service unit"
+    mkdir -p "${HOME}/.config/systemd/user"
+    cp "${REPO_DIR}/dist/orchestrator.service" "${HOME}/.config/systemd/user/orchestrator.service"
+    systemctl --user daemon-reload
 
     systemctl --user enable orchestrator.service dashboard.service
     echo "Restarting orchestrator and dashboard"

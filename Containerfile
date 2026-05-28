@@ -36,7 +36,6 @@ RUN systemctl enable drella-fetch-secrets.service
 COPY usr/libexec/drella-update-orchestrator /usr/libexec/drella-update-orchestrator
 COPY usr/lib/systemd/user/drella-update-orchestrator.service /usr/lib/systemd/user/drella-update-orchestrator.service
 COPY usr/lib/systemd/user/drella-update-orchestrator.timer /usr/lib/systemd/user/drella-update-orchestrator.timer
-COPY usr/lib/systemd/user/orchestrator.service /usr/lib/systemd/user/orchestrator.service
 COPY usr/lib/systemd/user/dashboard.service /usr/lib/systemd/user/dashboard.service
 
 # SSH authorized keys fetched from GitHub at build time, stored in /usr
