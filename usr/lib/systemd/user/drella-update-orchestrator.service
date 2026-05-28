@@ -1,0 +1,6 @@
+[Unit]
+Description=Pull latest orchestrator code from GitHub
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/drella-update-orchestrator
