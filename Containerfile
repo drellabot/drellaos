@@ -22,13 +22,24 @@ COPY usr/lib/sysusers.d/drella.conf /usr/lib/sysusers.d/drella.conf
 COPY usr/lib/tmpfiles.d/drella-home.conf /usr/lib/tmpfiles.d/drella-home.conf
 COPY usr/etc/sudoers.d/drella /etc/sudoers.d/drella
 
-# Add ~/.local/bin to PATH for all users (e.g. claude code lives here)
+# Add ~/go/bin and ~/.local/bin to PATH for all users
 COPY usr/etc/profile.d/local-bin.sh /etc/profile.d/local-bin.sh
+COPY usr/lib/environment.d/50-go-path.conf /usr/lib/environment.d/50-go-path.conf
 
 # Fetch credentials from AWS Secrets Manager at boot
 COPY usr/libexec/drella-fetch-secrets /usr/libexec/drella-fetch-secrets
 COPY usr/lib/systemd/system/drella-fetch-secrets.service /usr/lib/systemd/system/drella-fetch-secrets.service
 RUN systemctl enable drella-fetch-secrets.service
+
+# User services: orchestrator, dashboard, and auto-update timer
+# The update timer is enabled for the drella user via tmpfiles, not globally.
+COPY usr/libexec/drella-update-orchestrator /usr/libexec/drella-update-orchestrator
+COPY usr/lib/systemd/user/drella-update-orchestrator.service /usr/lib/systemd/user/drella-update-orchestrator.service
+COPY usr/lib/systemd/user/drella-update-orchestrator.timer /usr/lib/systemd/user/drella-update-orchestrator.timer
+COPY usr/lib/systemd/user/dashboard.service /usr/lib/systemd/user/dashboard.service
+# The orchestrator uses TimeoutStopSec=3600 to drain long-running tasks.
+# Extend user@.service timeout so the user manager isn't killed first.
+COPY usr/lib/systemd/system/user@.service.d/50-timeout.conf /usr/lib/systemd/system/user@.service.d/50-timeout.conf
 
 # SSH authorized keys fetched from GitHub at build time, stored in /usr
 # sshd is configured to read from this path
