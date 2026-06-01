@@ -1,5 +1,13 @@
 FROM quay.io/fedora/fedora-bootc:44
 
+ARG BUILD_SHA=unknown
+ARG BUILD_TIMESTAMP=unknown
+
+LABEL org.opencontainers.image.title="DrellaOS"
+LABEL org.opencontainers.image.source="https://github.com/drellabot/drellaos"
+LABEL org.opencontainers.image.revision="${BUILD_SHA}"
+LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
+
 # Install packages
 RUN dnf install -y \
       awscli2 \
@@ -58,3 +66,8 @@ RUN set -euo pipefail && \
     done > /usr/lib/drella-authorized-keys && \
     chmod 0644 /usr/lib/drella-authorized-keys
 RUN echo 'AuthorizedKeysFile /usr/lib/%u-authorized-keys .ssh/authorized_keys' > /etc/ssh/sshd_config.d/50-drella-keys.conf
+
+# Stamp os-release with DrellaOS build metadata (following bluefin's pattern)
+RUN sed -i '/^VARIANT_ID=/d; /^BUILD_ID=/d' /usr/lib/os-release && \
+    printf 'VARIANT_ID=drellaos\nIMAGE_ID=drellaos\nBUILD_ID=%s\nIMAGE_VERSION=%s\n' \
+      "${BUILD_SHA}" "${BUILD_TIMESTAMP}" >> /usr/lib/os-release
