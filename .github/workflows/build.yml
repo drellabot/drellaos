@@ -37,11 +37,18 @@ jobs:
 
       - name: Build image
         run: |
+          BUILD_SHA="$(echo "${{ github.sha }}" | cut -c1-7)"
+          BUILD_TIMESTAMP="$(date -u +'%Y%m%dT%H%M%SZ')"
           TAG_ARGS=""
           while IFS= read -r tag; do
             TAG_ARGS="${TAG_ARGS} --tag ${tag}"
           done <<< "${DOCKER_METADATA_OUTPUT_TAGS}"
-          podman build ${TAG_ARGS} -f Containerfile .
+          podman build ${TAG_ARGS} \
+            --build-arg BUILD_SHA="${BUILD_SHA}" \
+            --build-arg BUILD_TIMESTAMP="${BUILD_TIMESTAMP}" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.created=${BUILD_TIMESTAMP}" \
+            -f Containerfile .
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
